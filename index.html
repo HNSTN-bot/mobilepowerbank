@@ -296,9 +296,18 @@
 
   /* ---------- Technische Daten ---------- */
   #daten { background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .spec-nav { display: flex; gap: clamp(20px, 3vw, 44px); flex-wrap: wrap; margin-bottom: clamp(36px, 5vh, 60px); }
-  .spec-nav .ul-link { color: var(--gray); }
-  .spec-nav .ul-link.active { color: var(--blue); }
+  .spec-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: clamp(36px, 5vh, 60px); align-items: center; }
+  .spec-nav .spec-hint { font-family: var(--display); font-size: 11px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--gray-dim); margin-right: 8px; display: flex; align-items: center; gap: 7px; }
+  .spec-nav .spec-hint::after { content: ""; width: 14px; height: 1px; background: var(--gray-dim); }
+  /* Tabs als klickbare Chips */
+  .spec-nav .tab { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border: 1.5px solid rgba(10, 53, 168, .28); border-radius: 999px; background: transparent; cursor: pointer; font-family: var(--display); font-size: 12.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gray); transition: border-color .22s var(--ease), background .22s var(--ease), color .22s var(--ease), transform .22s var(--ease); }
+  .spec-nav .tab::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgba(10, 53, 168, .3); transition: background .22s var(--ease), transform .22s var(--ease); flex: 0 0 auto; }
+  .spec-nav .tab:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
+  .spec-nav .tab:hover::before { background: var(--yellow); }
+  .spec-nav .tab:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .spec-nav .tab.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .spec-nav .tab.active::before { background: var(--yellow); transform: scale(1.15); }
+  @media (max-width: 600px) { .spec-nav .tab { padding: 10px 15px; font-size: 11.5px; letter-spacing: .1em; } .spec-nav .spec-hint { width: 100%; margin-bottom: 4px; } }
   .spec-panel { display: none; }
   .spec-panel.active { display: block; animation: fadein .6s var(--ease); }
   @keyframes fadein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -540,11 +549,12 @@
     </div>
 
     <div class="spec-nav rv">
-      <button class="ul-link active" data-tab="allgemein">Allgemein</button>
-      <button class="ul-link" data-tab="laden">Ladeschnittstelle</button>
-      <button class="ul-link" data-tab="notstrom">AC-Notstrom</button>
-      <button class="ul-link" data-tab="batterie">Batterie</button>
-      <button class="ul-link" data-tab="wechselrichter">Wechselrichter</button>
+      <span class="spec-hint">Bereich w&auml;hlen</span>
+      <button class="tab active" type="button" data-tab="allgemein">Allgemein</button>
+      <button class="tab" type="button" data-tab="laden">Ladeschnittstelle</button>
+      <button class="tab" type="button" data-tab="notstrom">AC-Notstrom</button>
+      <button class="tab" type="button" data-tab="batterie">Batterie</button>
+      <button class="tab" type="button" data-tab="wechselrichter">Wechselrichter</button>
     </div>
 
     <div class="spec-panel active" id="tab-allgemein">
@@ -884,9 +894,9 @@
   idxLinks.forEach(a => { const s = document.querySelector(a.getAttribute('href')); s && secIO.observe(s); });
 
   // ---------- Spec tabs ----------
-  document.querySelectorAll('.spec-nav .ul-link').forEach(tab => {
+  document.querySelectorAll('.spec-nav .tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.spec-nav .ul-link').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.spec-nav .tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.spec-panel').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
       document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
